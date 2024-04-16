@@ -41,10 +41,8 @@ RUN apk update && apk add --no-cache \
     tzdata \
     unzip \
     wget \
-    openjdk11 \
     xvfb-run \
     bash \
-    rsync \
     zip \
     && rm -rf /var/cache/apk/*
 #===============
@@ -78,32 +76,32 @@ WORKDIR /home/androidusr
 #=====================
 # Install Android SDK
 #=====================
-ENV SDK_VERSION=commandlinetools-linux-8512546_latest
-ENV ANDROID_BUILD_TOOLS_VERSION=34.0.0
-ENV ANDROID_FOLDER_NAME=cmdline-tools
-ENV ANDROID_DOWNLOAD_PATH=/home/androidusr/${ANDROID_FOLDER_NAME} \
-    ANDROID_HOME=/opt/android \
-    ANDROID_TOOL_HOME=/opt/android/${ANDROID_FOLDER_NAME}
+# ENV SDK_VERSION=commandlinetools-linux-8512546_latest
+# ENV ANDROID_BUILD_TOOLS_VERSION=34.0.0
+# ENV ANDROID_FOLDER_NAME=cmdline-tools
+# ENV ANDROID_DOWNLOAD_PATH=/home/androidusr/${ANDROID_FOLDER_NAME} \
+#     ANDROID_HOME=/opt/android \
+#     ANDROID_TOOL_HOME=/opt/android/${ANDROID_FOLDER_NAME}
 
-RUN wget -O tools.zip https://dl.google.com/android/repository/${SDK_VERSION}.zip && \
-    unzip tools.zip && rm tools.zip && \
-    chmod a+x -R ${ANDROID_DOWNLOAD_PATH} && \
-    chown -R 1300:1301 ${ANDROID_DOWNLOAD_PATH} && \
-    mkdir -p ${ANDROID_TOOL_HOME} && \
-    mv ${ANDROID_DOWNLOAD_PATH} ${ANDROID_TOOL_HOME}/tools
-ENV PATH=$PATH:${ANDROID_TOOL_HOME}/tools:${ANDROID_TOOL_HOME}/tools/bin
+# RUN wget -O tools.zip https://dl.google.com/android/repository/${SDK_VERSION}.zip && \
+#     unzip tools.zip && rm tools.zip && \
+#     chmod a+x -R ${ANDROID_DOWNLOAD_PATH} && \
+#     chown -R 1300:1301 ${ANDROID_DOWNLOAD_PATH} && \
+#     mkdir -p ${ANDROID_TOOL_HOME} && \
+#     mv ${ANDROID_DOWNLOAD_PATH} ${ANDROID_TOOL_HOME}/tools
+# ENV PATH=$PATH:${ANDROID_TOOL_HOME}/tools:${ANDROID_TOOL_HOME}/tools/bin
 
-# https://askubuntu.com/questions/885658/android-sdk-repositories-cfg-could-not-be-loaded
-RUN mkdir -p ~/.android && \
-    touch ~/.android/repositories.cfg && \
-    echo y | sdkmanager "platform-tools" && \
-    echo y | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" && \
-    mv ~/.android .android && \
-    chown -R 1300:1301 .android
-ENV PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools
+# # https://askubuntu.com/questions/885658/android-sdk-repositories-cfg-could-not-be-loaded
+# RUN mkdir -p ~/.android && \
+#     touch ~/.android/repositories.cfg && \
+#     echo y | sdkmanager "platform-tools" && \
+#     echo y | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" && \
+#     mv ~/.android .android && \
+#     chown -R 1300:1301 .android
+# ENV PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools
 
 #====================================
-# Install appium and costomize it 
+# Install appium and customize it 
 #====================================
 
 WORKDIR /appium-fork
@@ -111,25 +109,16 @@ WORKDIR /appium-fork
 COPY . /appium-fork
 
 # build appium with custom patches 
-RUN npm i  && \
-    echo "Appium build completed"
+RUN npm i  
 
+RUN ln -s /appium-fork/node_modules/.bin/appium /usr/local/bin/appium
 
-# install appium 
-ENV APPIUM_VERSION=2.5.0
-RUN npm install -g appium@$APPIUM_VERSION && \
-    npm cache clean --force && \
-    rm -rf /tmp/* /var/cache/apk/*
-
-# Copy custom mcloud patches
-RUN cp -r -v /appium-fork/node_modules/@appium/base-driver/build/lib/* /usr/local/lib/node_modules/appium/node_modules/@appium/base-driver/build/lib/ && \ 
-    cp -r -v /appium-fork/packages/appium/build/lib/* /usr/local/lib/node_modules/appium/build/lib 
 
 
 # ====================================================
 # Fix permission issue to download e.g. chromedriver
 # ====================================================
-RUN chown -R 1300:1301 /usr/local/lib/node_modules/appium
+RUN chown -R 1300:1301 /appium-fork
 
 
 
