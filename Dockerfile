@@ -183,33 +183,6 @@ ENV APPIUM_APP_SIZE_DISABLE=false
 ENV APPIUM_PLUGINS=
 
 
-
-
-# commented this mkdir because of this error with chown 
-# RUN mkdir -p $APPIUM_APPS_DIR && \
-#     chown androidusr:androidusr $APPIUM_APPS_DIR
-# Error while building 
-
-#  > [stage-1  5/26] RUN mkdir -p $APPIUM_APPS_DIR &&     chown androidusr:androidusr $APPIUM_APPS_DIR:                                                                                   
-# 0.218 BusyBox v1.36.1 (2023-11-07 18:53:09 UTC) multi-call binary.                          
-# 0.218 
-# 0.218 Usage: mkdir [-m MODE] [-p] DIRECTORY...
-# 0.218 
-# 0.218 Create DIRECTORY
-# 0.218 
-# 0.218   -m MODE Mode
-# 0.218   -p      No error if exists; make parent directories as needed
-# ------
-# Dockerfile:131
-# --------------------
-#  130 |     USER root
-#  131 | >>> RUN mkdir -p $APPIUM_APPS_DIR && \
-#  132 | >>>     chown androidusr:androidusr $APPIUM_APPS_DIR
-#  133 |     
-# --------------------
-# ERROR: failed to solve: process "/bin/sh -c mkdir -p $APPIUM_APPS_DIR &&     ch chown androidusr:androidusr $APPIUM_APPS_DIR" did not complete successfully: exit code: 1
-
-
 # ====================================================
 # Fix permission issue to download e.g. chromedriver
 # ====================================================
@@ -232,7 +205,8 @@ RUN apk add \
 
 
 USER root
-
+RUN mkdir -p $APPIUM_APPS_DIR && \
+    chown androidusr:androidusr $APPIUM_APPS_DIR
 #Grab gidevice from github and extract it in a folder
 RUN wget https://github.com/danielpaulus/go-ios/releases/download/v1.0.121/go-ios-linux.zip && \
     unzip go-ios-linux.zip -d /usr/local/bin && \
@@ -273,8 +247,6 @@ RUN appium driver list && \
 	appium plugin list
 
 #TODO:/ think about different images per each device platform
-# RUN appium driver install uiautomator2 && \
-# 	appium driver install xcuitest@5.7.0
 
 
 ENV APPIUM_DRIVER_UIAUTOMATOR2_VERSION="2.45.0"
