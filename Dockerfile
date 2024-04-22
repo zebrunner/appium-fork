@@ -20,6 +20,7 @@ ENV ROUTER_UUID=
 ENV ADB_PORT=5037
 ENV ANDROID_DEVICE=
 ENV ADB_POLLING_SEC=5
+ENV ANDROID_HOME=/opt/android
 
 ENV PROXY_PORT=8080
 ENV SERVER_PROXY_PORT=0
@@ -268,3 +269,4 @@ EXPOSE 4723
 CMD ["/opt/entrypoint/entrypoint.sh"]
 
 HEALTHCHECK --interval=10s --retries=3 CMD ["healthcheck"]
+ф
