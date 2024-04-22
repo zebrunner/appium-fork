@@ -308,6 +308,7 @@ if [ "${PLATFORM_NAME}" = "android" ]; then
     . /opt/android.sh
 elif [ "${PLATFORM_NAME}" = "ios" ]; then
     export AUTOMATION_NAME='XCUITest'
+    . /opt/ios.sh
 fi
 
 if [ "$CONNECT_TO_GRID" = true ]; then

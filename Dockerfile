@@ -52,7 +52,8 @@ ENV UNREGISTER_IF_STILL_DOWN_AFTER=60000
 ENV DEVICE_BUS=/dev/bus/usb/003/011
 
 # Usbmuxd settings "host:port"
-ENV USBMUXD_SOCKET_ADDRESS=
+# ENV USBMUXD_SOCKET_ADDRESS=
+ENV USBMUXD_SOCKET_ADDRESS=connector:2222
 
 # Debug mode vars
 ENV DEBUG=false
@@ -221,6 +222,7 @@ COPY files/start-capture-artifacts.sh /opt
 # Zebrunner MCloud node config generator
 COPY files/debug.sh /opt
 COPY files/android.sh /opt
+COPY files/ios.sh /opt
 COPY files/zbr-config-gen.sh /opt
 COPY files/zbr-default-caps-gen.sh /opt
 
@@ -247,7 +249,6 @@ RUN appium driver list && \
 	appium plugin list
 
 #TODO:/ think about different images per each device platform
-
 
 ENV APPIUM_DRIVER_UIAUTOMATOR2_VERSION="2.45.0"
 ENV APPIUM_DRIVER_XCUITEST_VERSION="7.7.2"
