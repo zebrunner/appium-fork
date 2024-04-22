@@ -9,7 +9,7 @@ ENV DEVICE_UDID=
 # Integration UUID for ReDroid integration
 ENV ROUTER_UUID=
 
-# Default appium 2.0 ueser:
+# Default appium 2.0 user:
 # uid=1300(androidusr) gid=1301(androidusr) groups=1301(androidusr)
 
 
