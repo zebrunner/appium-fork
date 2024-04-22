@@ -187,7 +187,7 @@ ENV APPIUM_PLUGINS=
 # ====================================================
 # Fix permission issue to download e.g. chromedriver
 # ====================================================
-RUN chown -R 1300:1301 /appium-fork
+# RUN chown -R androidusr:androidusr /appium-fork
 
 
 
